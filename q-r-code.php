@@ -26,12 +26,12 @@ class Basic_QR_Code
     {
         $current_post_url = get_permalink();
 
-        // Color can Change  from admin panel
-        $foreground_color = get_option('qr_foreground_color', '000000'); // ডিফল্ট কালো
-        $background_color = get_option('qr_background_color', 'ffffff'); // ডিফল্ট সাদা
-        $qr_size = get_option('qr_code_size', 150); // ডিফল্ট 150px
+        // 🎨 অ্যাডমিন প্যানেল থেকে কালার ও সাইজ পাওয়া Chose color from admin panel
+        $foreground_color = str_replace("#", "", get_option('qr_foreground_color', '0000FF')); // blue default color
+        $background_color = str_replace("#", "", get_option('qr_background_color', 'ffffff')); // white default bg color
+        $qr_size = get_option('qr_code_size', 150); // 150px default
 
-        // qr code gererator
+        // qr code link
         $qr_code_image = "https://api.qrserver.com/v1/create-qr-code/?size={$qr_size}x{$qr_size}&data={$current_post_url}&color={$foreground_color}&bgcolor={$background_color}";
 
         $newcontent = $content . "<p><img src='{$qr_code_image}'></p>";
@@ -69,25 +69,42 @@ class Basic_QR_Code
                 <table class="form-table">
                     <tr>
                         <th>QR Code Color:</th>
-                        <td><input type="text" name="qr_foreground_color" value="<?php echo esc_attr(get_option('qr_foreground_color', '000000')); ?>" placeholder="000000"></td>
+                        <td>
+                            <input type="text" id="qr_foreground_color" name="qr_foreground_color" value="<?php echo esc_attr(get_option('qr_foreground_color', '#000000')); ?>">
+                        </td>
                     </tr>
                     <tr>
                         <th>Background Color:</th>
-                        <td><input type="text" name="qr_background_color" value="<?php echo esc_attr(get_option('qr_background_color', 'ffffff')); ?>" placeholder="ffffff"></td>
+                        <td>
+                            <input type="text" id="qr_background_color" name="qr_background_color" value="<?php echo esc_attr(get_option('qr_background_color', '#ffffff')); ?>">
+                        </td>
                     </tr>
                     <tr>
                         <th>QR Code Size:</th>
-                        <td><input type="number" name="qr_code_size" value="<?php echo esc_attr(get_option('qr_code_size', 150)); ?>" min="50" max="500"></td>
+                        <td>
+                            <input type="number" name="qr_code_size" value="<?php echo esc_attr(get_option('qr_code_size', 150)); ?>" min="50" max="500">
+                        </td>
                     </tr>
                 </table>
                 <?php submit_button(); ?>
             </form>
         </div>
+
+        <script>
+            document.addEventListener("DOMContentLoaded", function() {
+                // Color Picker added
+                if (typeof wp !== "undefined" && wp.colorPicker) {
+                    jQuery("#qr_foreground_color").wpColorPicker();
+                    jQuery("#qr_background_color").wpColorPicker();
+                }
+            });
+        </script>
 <?php
     }
 }
 
 new Basic_QR_Code();
+
 
 
 // class Basic_QR_Code
